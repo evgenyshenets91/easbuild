@@ -21,6 +21,7 @@ jobs:
           script: |
             const name = '${{ github.workflow   }}';
             const success = '${{ job.status }}' === 'success';
+            const url = 'https://expo.dev/accounts/evgenyshenets91/projects/easbuild/builds/c5903111-dc15-4d02-b80b-c3a0229a8c56';
             const body = `${name}: ${success ? 'succeeded ✅' : 'failed ❌'}\n${url}`;
               
             await github.rest.issues.createComment({
