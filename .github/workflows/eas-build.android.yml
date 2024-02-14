@@ -14,15 +14,17 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Build on EAS
+        run: result_json=$(eas build --profile development --platform android --non-interactive --json)
       - name: Add comment to PR
         uses: actions/github-script@v6
         if: always()
         with:
           script: |
-            const name = '${{ github.workflow   }}';
-            const success = '${{ job.status }}' === 'success';
-            const url = 'https://expo.dev/accounts/evgenyshenets91/projects/easbuild/builds/c5903111-dc15-4d02-b80b-c3a0229a8c56';
-            const body = `${name}: ${success ? 'succeeded ✅' : 'failed ❌'}\n${url}`;
+            const name = '${{ github.workflow }}';
+            const body = `${result_json}`;
               
             await github.rest.issues.createComment({
               issue_number: context.issue.number,
