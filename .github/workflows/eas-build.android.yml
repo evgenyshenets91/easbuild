@@ -14,9 +14,18 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-      - name: 🚀 Create preview
-        uses: expo/expo-github-action/preview@v8
+      - name: Add comment to PR
+        uses: actions/github-script@v6
+        if: always()
         with:
-          # `github.event.pull_request.head.ref` is only available on `pull_request` triggers.
-          # Use your own, or keep the automatically infered branch name from `--auto`, when using different triggers.
-          command: echo ${{ github.event.pull_request.head.ref }}
+          script: |
+            const name = '${{ github.workflow   }}';
+            const success = '${{ job.status }}' === 'success';
+            const body = `${name}: ${success ? 'succeeded ✅' : 'failed ❌'}\n${url}`;
+              
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
