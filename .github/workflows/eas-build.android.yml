@@ -3,7 +3,12 @@ jobs:
   build-android-development_and_add_in_pr_result:
     runs-on: ubuntu-latest
     steps:
-    - name: 🚀 Create preview
-      uses: expo/expo-github-action/preview@v8
-      with:
-        command: echo ${{ github.event.pull_request.head.ref }}
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+      - name: 🚀 Create preview
+        uses: expo/expo-github-action/preview@v8
+        with:
+          command: echo ${{ github.event.pull_request.head.ref }}
