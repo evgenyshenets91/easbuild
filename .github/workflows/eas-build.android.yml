@@ -20,9 +20,7 @@ jobs:
         run: npm ci
 
       - name: EAS build
-        run: |
-          echo "$(eas build --profile development --platform android --non-interactive)" | tee my-output.txt
-          cat my-output.txt
+        run: echo "$(eas build --profile development --platform android --non-interactive)" | tee my-output.txt
 
       - name: Get expo build url
         run: |
