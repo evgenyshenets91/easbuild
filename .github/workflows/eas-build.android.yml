@@ -20,7 +20,7 @@ jobs:
         run: npm ci
 
       - name: EAS build
-        run: 
+        run: |
           echo "$(eas build --profile development --platform android --non-interactive)" | tee my-output.txt
           cat my-output.txt
 
