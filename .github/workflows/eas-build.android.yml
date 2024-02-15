@@ -9,23 +9,31 @@ jobs:
         with:
           node-version: 18.x
           cache: npm
+
       - name: Setup Expo and EAS
         uses: expo/expo-github-action@v8
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+
       - name: Install dependencies
         run: npm ci
+
       - name: EAS build
-        run: echo "$(eas build --profile development --platform android --non-interactive)" | tee my-output.txt
+        run: 
+          echo "$(eas build --profile development --platform android --non-interactive)" | tee my-output.txt
+          cat my-output.txt
+
       - name: Get expo build url
         run: |
           expoBuildUrl="$(grep -o -E 'https?://expo.dev/accounts/(\w+)/projects/(\w|[-]\w)+/builds[^" ]+' my-output.txt | head -1)"
           echo 'EXPO_BUILD_URL='$expoBuildUrl >> $GITHUB_ENV
+
       - name: Generate qr code
         run: |
           expoQr="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=$EXPO_BUILD_URL"
           echo 'EXPO_QR='$expoQr >> $GITHUB_ENV
+
       - name: Add comment
         run: gh pr comment $PR --body "**Your build is ready!** <br><br> ![Expo QR]($EXPO_QR) <br> **Explore your build on expo.dev:** <br> [$EXPO_BUILD_URL]($EXPO_BUILD_URL)"
         env:
