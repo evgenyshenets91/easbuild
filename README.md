@@ -10,3 +10,4 @@
 
 ## Below example, how to run detox in pair with eas Build:
 - `eas build --profile development --platform android --non-interactive -e test`
+- If the build fails, you can go to expo.dev and download the artifacts.
